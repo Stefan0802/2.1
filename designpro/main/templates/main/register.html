@@ -1,6 +1,7 @@
 {% extends 'basic.html' %}
 
 {% block content%}
+{% csrf_token %}
     <h2>Регистрация</h2>
     <form method="POST">
         {% csrf_token %}

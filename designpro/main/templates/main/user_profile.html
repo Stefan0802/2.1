@@ -1,0 +1,12 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+  <h2>Профиль пользователя: {{ user.username }}</h2>
+  <p><strong>Email:</strong> {{ user.email }}</p>
+  <p><strong>Имя:</strong> {{ user.first_name }}</p>
+  <p><strong>Фамилия:</strong> {{ user.last_name }}</p>
+  <p><strong>Ответ на секретный вопрос:</strong> {{ user.security_answer }}</p>
+  <!-- Не показывайте секретный ответ, если это не требуется -->
+  <p><strong>Дата регистрации:</strong> {{ user.date_joined }}</p>
+  <a href="{% url 'home' %}">Вернуться на главную</a>
+{% endblock %}

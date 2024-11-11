@@ -2,4 +2,6 @@
 
 {% block content%}
 <a href="{% url 'profile' %}">профиль</a>
+<p>Количество успешных входов: {{ user.login_count }}</p>
+<p>Дата последнего входа: {{ user.last_login_date  }}</p>
 {% endblock %}

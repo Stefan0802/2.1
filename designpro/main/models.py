@@ -37,15 +37,7 @@ class Application(models.Model):
     description_application = models.TextField(blank=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, blank=True)
-
-    image = models.ImageField(
-        upload_to='uploads/',
-        validators=[
-            FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png', 'bmp']),
-        ],
-        blank=True,
-        null=True,
-    )
+    image = models.ImageField(upload_to='application/', blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

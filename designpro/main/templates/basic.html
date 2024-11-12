@@ -11,7 +11,10 @@
 </head>
 <body>
 <header>
-    <!-- Будущая шапка -->
+    <a href="{% url 'home' %}">Главная</a>
+    <a href="{% url 'create_application' %}">Создать заявку</a>
+    <a href="{% url 'application_list' %}">Заявки</a>
+    <a href="{% url 'profile' %}">профиль</a>
 </header>
 
 <main>

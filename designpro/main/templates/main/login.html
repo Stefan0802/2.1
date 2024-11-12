@@ -1,6 +1,4 @@
-{% extends 'basic.html' %}
 
-{% block content%}
     <h2>Вход</h2>
     <form method="post">
         {% csrf_token %}
@@ -10,4 +8,3 @@
             <a href="{% url 'password_reset_question' %}">Забыли пароль?</a>
     </form>
     <p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь</a></p>
-{% endblock %}

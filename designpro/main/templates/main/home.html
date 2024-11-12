@@ -1,7 +1,27 @@
 {% extends 'basic.html' %}
 
 {% block content%}
-<a href="{% url 'profile' %}">профиль</a>
+
 <p>Количество успешных входов: {{ user.login_count }}</p>
 <p>Дата последнего входа: {{ user.last_login_date  }}</p>
+
+<h1>Главная страница</h1>
+
+<h2>Последние 4 заявки в статусе "Выполнено"</h2>
+<ul>
+    {% for application in completed_applications %}
+        <li>
+            <strong>Временная метка:</strong> {{ application.created_at }}<br>
+            <strong>Название:</strong> {{ application.title_application }}<br>
+            <strong>Категория:</strong> {{ application.category }}<br>
+            {% if application.image %}
+                <strong>Фотография:</strong> <img src="{{ application.image.url }}" alt="{{ application.title_application }}" style="width: 100px; height: auto;"><br>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li>Нет завершенных заявок для отображения.</li>
+    {% endfor %}
+</ul>
+
+<h2>Количество заявок в статусе "Принято в работу": {{ in_progress_count }}</h2>
 {% endblock %}

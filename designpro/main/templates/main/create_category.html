@@ -1,0 +1,11 @@
+{% extends 'basic.html' %}
+
+{% block content %}
+<h2>Создать категорию</h2>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+<a href="{% url 'category_list' %}">Назад к списку категорий</a>
+{% endblock %}

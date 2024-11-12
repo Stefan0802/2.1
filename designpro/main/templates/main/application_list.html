@@ -18,7 +18,7 @@
                 <h3>{{ form.title_application }}</h3>
                 <p>{{ form.description_application }}</p>
                 <p>Категория: {{ form.category }}</p>
-                <p>Статус: {{ form.status }}</p>
+                <p>Статус: {{ form.status }} {% if user.is_staff %}<a href="{% url 'change_status' form.id %}">Изменить</a>{% endif %}</p>
                 <p>Кем: {{ form.user }}</p>
 
                 {% if form.image %}

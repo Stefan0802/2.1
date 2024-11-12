@@ -22,16 +22,13 @@ class UserRegisterForm(UserCreationForm):
         user.security_question = self.cleaned_data['security_question']
         user.security_answer = self.cleaned_data['security_answer']
         if commit:
-            user.save()  # Сохраняем пользователя, если commit=True
-        return user  # Возвращаем экземпляр пользователя
+            user.save()
+        return user
 
 class CustomLoginForm(AuthenticationForm):
     class Meta:
         model = AuthenticationForm
         fields = ('username', 'password')
-
-
-
 
 class PasswordResetQuestionForm(forms.Form):
     username = forms.CharField(max_length=150, label="Имя пользователя")
@@ -57,8 +54,20 @@ class ApplicationForm(forms.ModelForm):
         fields = ['title_application', 'description_application', 'category', 'image']
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)  # Получаем пользователя из kwargs
+        user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.all()
         if user is not None:
-            self.instance.user = user  # Привязываем пользователя к экземпляру заявки
+            self.instance.user = user
+
+class StatusChangeForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = ['status']  # Убедитесь, что статус является полем в вашей модели
+
+from .models import Category
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['name']

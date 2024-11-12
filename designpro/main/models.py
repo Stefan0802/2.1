@@ -3,13 +3,6 @@ from django.db import models
 from django.utils.timezone import now
 from django.core.validators import FileExtensionValidator
 
-
-STATUS_CHOICES = (
-    ('Новая', 'Новая'),
-    ('Принято в работу', 'Принято в работу'),
-    ('Выполнено', 'Выполнено'),
-)
-
 class CustomUser(AbstractUser):
     security_question = models.CharField(max_length=255, blank=True)
     security_answer = models.CharField(max_length=255, blank=True)
@@ -25,6 +18,12 @@ class CustomUser(AbstractUser):
         self.login_count += 1
         self.last_login_date = now()
         self.save()
+
+STATUS_CHOICES = (
+    ('Новая', 'Новая'),
+    ('Принято в работу', 'Принято в работу'),
+    ('Выполнено', 'Выполнено'),
+)
 
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)

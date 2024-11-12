@@ -14,4 +14,10 @@ urlpatterns = [
     path('application_list/', views.ApplicationListView.as_view(), name='application_list'),
     path('application/confirm_delete/<int:application_id>/', views.confirm_delete_application, name='confirm_delete_application'),
     path('application/delete/<int:application_id>/', views.delete_application, name='delete_application'),
+
+    path('application/change_status/<int:application_id>/', views.change_status, name='change_status'),
+
+    path('create_category/', views.create_category, name='create_category'),
+    path('categories/', views.category_list, name='category_list'),
+    path('categories/delete/<int:category_id>/', views.delete_category, name='delete_category'),
 ]

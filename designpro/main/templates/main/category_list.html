@@ -1,0 +1,15 @@
+<!-- category_list.html -->
+{% extends 'basic.html' %}
+
+{% block content %}
+<h2>Список категорий</h2>
+<ul>
+    {% for category in categories %}
+        <li>
+            {{ category.name }}
+            <a href="{% url 'delete_category' category.id %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{% url 'create_category' %}">Создать новую категорию</a>
+{% endblock %}

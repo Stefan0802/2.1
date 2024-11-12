@@ -141,3 +141,54 @@ def delete_application(request, application_id):
     application.delete()
     messages.success(request, "Заявка успешно удалена.")
     return redirect('application_list')
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Application
+from .forms import StatusChangeForm
+from django.contrib import messages
+
+
+def change_status(request, application_id):
+    application = get_object_or_404(Application, id=application_id)
+
+    if request.method == 'POST':
+        form = StatusChangeForm(request.POST, instance=application)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Статус успешно изменен!')
+            return redirect('application_list')  # Перенаправление на список заявок
+    else:
+        form = StatusChangeForm(instance=application)
+
+    return render(request, 'main/change_status.html', {'form': form, 'application': application})
+
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Category
+from .forms import CategoryForm
+from django.contrib import messages
+
+def create_category(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Категория успешно создана!')
+            return redirect('category_list')
+    else:
+        form = CategoryForm()
+    return render(request, 'main/create_category.html', {'form': form})
+
+def category_list(request):
+    categories = Category.objects.all()
+    return render(request, 'main/category_list.html', {'categories': categories})
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Category
+from django.contrib import messages
+
+def delete_category(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.delete()
+    messages.success(request, 'Категория успешно удалена!')
+    return redirect('category_list')

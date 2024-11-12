@@ -20,4 +20,6 @@ urlpatterns = [
     path('create_category/', views.create_category, name='create_category'),
     path('categories/', views.category_list, name='category_list'),
     path('categories/delete/<int:category_id>/', views.delete_category, name='delete_category'),
+
+    path('application/change_status/<int:application_id>/', views.change_status, name='change_status'),
 ]

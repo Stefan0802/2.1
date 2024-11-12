@@ -1,12 +1,9 @@
-<!-- change_status.html -->
-{% extends 'basic.html' %}
-
 {% block content %}
-<h2>Изменить статус заявки: {{ application.title_application }}</h2>
-<form method="POST">
+<h2>Смена статуса заявки {{ application.id }}</h2>
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Сохранить изменения</button>
+    <button type="submit">Изменить статус</button>
 </form>
 <a href="{% url 'application_list' %}">Назад к списку заявок</a>
 {% endblock %}

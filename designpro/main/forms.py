@@ -60,10 +60,24 @@ class ApplicationForm(forms.ModelForm):
         if user is not None:
             self.instance.user = user
 
-class StatusChangeForm(forms.ModelForm):
+class ChangeStatusForm(forms.ModelForm):
     class Meta:
         model = Application
-        fields = ['status']  # Убедитесь, что статус является полем в вашей модели
+        fields = ['status', 'image', 'comment']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status = cleaned_data.get("status")
+        image = cleaned_data.get("image")
+        comment = cleaned_data.get("comment")
+
+        if status == 'Выполнено' and not image:
+            self.add_error('image', 'Необходимо прикрепить изображение дизайна.')
+
+        if status == 'Принято в работу' and not comment:
+            self.add_error('comment', 'Необходимо указать комментарий.')
+
+        return cleaned_data
 
 from .models import Category
 

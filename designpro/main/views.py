@@ -25,28 +25,30 @@ class ApplicationListView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'application_list'
 
-
-
     def get_queryset(self):
         return Application.objects.order_by('id')
 
+@login_required
 def create_application(request):
     if request.method == 'POST':
         form = ApplicationForm(request.POST, request.FILES)
         image = request.FILES.get('image')
+
         if image:
-            max_size = 2 * 1024 * 1024
+            max_size = 2 * 1024 * 1024  # 2MB
             if image.size > max_size:
                 messages.error(request, "Размер изображения не должен превышать 2MB.")
-                return render(request, 'create_application.html', {'form': form})
+                return render(request, 'main/create_application.html', {'form': form})
 
             valid_formats = ['image/jpeg', 'image/png', 'image/gif']
             if image.content_type not in valid_formats:
                 messages.error(request, "Допустимые форматы: JPEG, PNG, GIF.")
-                return render(request, 'create_application.html', {'form': form})
+                return render(request, 'main/create_application.html', {'form': form})
 
         if form.is_valid():
-            form.save()
+            application = form.save(commit=False)  # Не сохраняем сразу
+            application.user = request.user  # Устанавливаем текущего пользователя
+            application.save()  # Теперь сохраняем
             messages.success(request, "Заявка успешно создана.")
             return redirect('application_list')
         else:
@@ -54,6 +56,7 @@ def create_application(request):
                 messages.error(request, error)
     else:
         form = ApplicationForm()
+
     return render(request, 'main/create_application.html', {'form': form})
 
 @login_required
@@ -144,24 +147,30 @@ def delete_application(request, application_id):
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Application
-from .forms import StatusChangeForm
+from .forms import ChangeStatusForm
 from django.contrib import messages
+
 
 
 def change_status(request, application_id):
     application = get_object_or_404(Application, id=application_id)
 
+    # Проверка, можно ли сменить статус
+    if application.status in ['Принято в работу', 'Выполнено']:
+        messages.error(request, 'Смена статуса невозможна.')
+        return redirect('application_list')
+
     if request.method == 'POST':
-        form = StatusChangeForm(request.POST, instance=application)
+        form = ChangeStatusForm(request.POST, request.FILES, instance=application)
         if form.is_valid():
+            # Сохраняем изменения в модели
             form.save()
-            messages.success(request, 'Статус успешно изменен!')
-            return redirect('application_list')  # Перенаправление на список заявок
+            messages.success(request, 'Статус заявки успешно изменен!')
+            return redirect('application_list')
     else:
-        form = StatusChangeForm(instance=application)
+        form = ChangeStatusForm(instance=application)
 
     return render(request, 'main/change_status.html', {'form': form, 'application': application})
-
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Category

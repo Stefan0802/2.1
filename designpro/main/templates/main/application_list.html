@@ -1,37 +1,54 @@
 {% extends 'basic.html' %}
 
 {% block content %}
-{% if messages %}
-        {% for message in messages %}
-            <strong style="color:red;">{{ message }}</strong>
-        {% endfor %}
-{% endif %}
-    <h2>Список заявок</h2>
-    <ul>
-        {% for form in application_list %}
-            <li>
-                {% if form.created_at == form.updated_at%}
-                    <h3>Создано: {{ form.created_at }}</h3>
-                {% else %}
-                    <h3>Обновлено: {{ form.updated_at }}</h3>
-                {% endif %}
-                <h3>{{ form.title_application }}</h3>
-                <p>{{ form.description_application }}</p>
-                <p>Категория: {{ form.category }}</p>
-                <p>Статус: {{ form.status }} {% if user.is_staff %}<a href="{% url 'change_status' form.id %}">Сменить статус</a>{% endif %}</p>
-                <p>Кем: {{ form.user }}</p>
+<form method="GET" action="{% url 'application_list' %}">
+    <input type="text" name="q" placeholder="Поиск заявок..." value="{{ request.GET.q }}">
+    <button type="submit">Поиск</button>
+</form>
 
-                {% if form.image %}
-                    <img src="{{ form.image.url }}" alt="Image" />
-                {% else %}
-                    <p>Изображение не доступно</p>
-                {% endif %}
+<ul>
+    {% for form in application_list %}
+        <li>
+            {% if form.created_at == form.updated_at %}
+                <h3>Создано: {{ form.created_at }}</h3>
+            {% else %}
+                <h3>Обновлено: {{ form.updated_at }}</h3>
+            {% endif %}
+            <h3>{{ form.title_application }}</h3>
+            <p>{{ form.description_application }}</p>
+            <p>Категория: {{ form.category }}</p>
+            <p>Статус: {{ form.status }} {% if user.is_staff %}<a href="{% url 'change_status' form.id %}">Сменить статус</a>{% endif %}</p>
+            <p>Кем: {{ form.user }}</p>
 
-                {% if form.comment %}
-                <p><strong>Комментарий: {{ form.comment}}</strong></p>
-                {% endif %}
-                <a href="{% url 'confirm_delete_application' form.id %}">Удалить</a>
-            </li>
-        {% endfor %}
-    </ul>
+            {% if form.image %}
+                <img src="{{ form.image.url }}" alt="Image" style="width:200px;">
+            {% else %}
+                <p>Изображение не доступно</p>
+            {% endif %}
+
+            {% if form.comment %}
+                <p><strong>Комментарий: {{ form.comment }}</strong></p>
+            {% endif %}
+            <a href="{% url 'confirm_delete_application' form.id %}">Удалить</a>
+        </li>
+    {% endfor %}
+</ul>
+
+{% block pagination %}
+    {% if is_paginated %}
+    <div>
+        <span>
+            {% if page_obj.has_previous %}
+                <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">назад</a>
+            {% endif %}
+            <span class="page-current">
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="{{ request.path }}?page={{ page_obj.next_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">дальше</a>
+            {% endif %}
+        </span>
+    </div>
+    {% endif %}
+{% endblock %}
 {% endblock %}

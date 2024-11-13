@@ -24,9 +24,24 @@ def register(request):
 class ApplicationListView(generic.ListView):
     template_name = 'polls/index.html'
     context_object_name = 'application_list'
+    paginate_by = 3
 
     def get_queryset(self):
-        return Application.objects.order_by('id')
+        queryset = Application.objects.order_by('id')
+        query = self.request.GET.get('q')
+
+        if query:
+            queryset = (queryset.filter(title_application__icontains=query)
+                        or
+                        queryset.filter(description_application__icontains=query)
+                        or
+                        queryset.filter(status__icontains=query)
+                        or
+                        queryset.filetr(comment__icontains=query)
+                        )
+
+
+        return queryset
 
 @login_required
 def create_application(request):
@@ -201,3 +216,5 @@ def delete_category(request, category_id):
     category.delete()
     messages.success(request, 'Категория успешно удалена!')
     return redirect('category_list')
+
+
